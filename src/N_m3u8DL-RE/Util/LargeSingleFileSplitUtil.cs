@@ -22,11 +22,18 @@ internal static class LargeSingleFileSplitUtil
     public static async Task<List<MediaSegment>?> SplitUrlAsync(MediaSegment segment, Dictionary<string,string> headers)
     {
         var url = segment.Url;
-        if (!await CanSplitAsync(url, headers)) return null;
 
-        if (segment.StartRange != null) return null;
-
-        long fileSize = await GetFileSizeAsync(url, headers);
+        long fileSize = 0;
+        // if range is specified, we assume Range header is supported
+        // try to get file size from Content-Range header first
+        // since some sites block requests w/o Range header
+        if (segment.StartRange != null) {
+                fileSize = await GetFileSizeFromContentRangeAsync(url, headers, (long)segment.StartRange, (long)segment.StopRange);
+        }
+        if (fileSize == 0) {
+                if (!await CanSplitAsync(url, headers)) return null;
+                fileSize = await GetFileSizeAsync(url, headers);
+        }
         if (fileSize == 0) return null;
 
         List<Clip> allClips = GetAllClips(url, fileSize);
@@ -61,6 +68,24 @@ internal static class LargeSingleFileSplitUtil
             Logger.DebugMarkUp(ex.Message);
             return false;
         }
+    }
+
+    private static async Task<long> GetFileSizeFromContentRangeAsync(string url, Dictionary<string, string> headers, long start, long stop)
+    {
+        using var httpRequestMessage = new HttpRequestMessage();
+        httpRequestMessage.RequestUri = new(url);
+        foreach (var header in headers)
+        {
+                httpRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
+        }
+        httpRequestMessage.Headers.TryAddWithoutValidation("range", $"bytes={start}-{stop}");
+        Logger.Debug(httpRequestMessage.Headers.ToString());
+        var response = (await HTTPUtil.AppHttpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead)).EnsureSuccessStatusCode();
+        Logger.Debug(response.Content.Headers.ToString());
+
+        var range = response.Content.Headers.ContentRange;
+        if (range.Unit == "bytes" && range.HasLength) return range.Length ?? 0;
+        return 0;
     }
 
     private static async Task<long> GetFileSizeAsync(string url, Dictionary<string, string> headers)
