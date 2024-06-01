@@ -30,7 +30,7 @@ internal class DownloadStatusColumn : ProgressColumn
         // 一秒汇报一次即可
         if (DateTimeStringDic.TryGetValue(task.Id, out var oldTime) && oldTime != now)
         {
-            var totalSize = speedContainer.SingleSegment ? (speedContainer.ResponseLength ?? 0) : (long)(size / (task.Value / task.MaxValue));
+            var totalSize = speedContainer.ResponseLength ?? ( speedContainer.SingleSegment ? 0 : (long)(size / (task.Value / task.MaxValue)) );
             SizeDic[task.Id] = $"{GlobalUtil.FormatFileSize(size)}/{GlobalUtil.FormatFileSize(totalSize)}";
         }
         DateTimeStringDic[task.Id] = now;
