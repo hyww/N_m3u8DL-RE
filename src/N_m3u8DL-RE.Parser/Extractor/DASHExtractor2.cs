@@ -236,8 +236,11 @@ internal partial class DASHExtractor2 : IExtractor
                         if (initialization != null)
                         {
                             var sourceURL = initialization.Attribute("sourceURL")?.Value;
+                            var initUrl = ParserUtil.CombineURL(segBaseUrl, initialization.Attribute("sourceURL")?.Value!);
+                            var initRange = initialization.Attribute("range")?.Value;
                             if (sourceURL == null)
                             {
+                                // TODO: handle initialization separately
                                 streamSpec.Playlist.MediaParts[0].MediaSegments.Add
                                 (
                                     new MediaSegment()
@@ -247,11 +250,15 @@ internal partial class DASHExtractor2 : IExtractor
                                         Duration = XmlConvert.ToTimeSpan(periodDuration ?? mediaPresentationDuration ?? "PT0S").TotalSeconds
                                     }
                                 );
+                                if (initRange != null)
+                                {
+                                    var (start, expect) = ParserUtil.ParseRange(initRange);
+                                    streamSpec.Playlist.MediaParts[0].MediaSegments[0].StartRange = start;
+                                    streamSpec.Playlist.MediaParts[0].MediaSegments[0].ExpectLength = expect;
+                                }
                             }
                             else
                             {
-                                var initUrl = ParserUtil.CombineURL(segBaseUrl, initialization.Attribute("sourceURL")?.Value!);
-                                var initRange = initialization.Attribute("range")?.Value;
                                 streamSpec.Playlist.MediaInit = new MediaSegment();
                                 streamSpec.Playlist.MediaInit.Index = -1; // 便于排序
                                 streamSpec.Playlist.MediaInit.Url = initUrl;
@@ -263,6 +270,7 @@ internal partial class DASHExtractor2 : IExtractor
                                 }
                             }
                         }
+                        // TODO: handle indexRange attribute and utilize Segment Index
                     }
 
                     // 第二种形式 SegmentList.SegmentList
