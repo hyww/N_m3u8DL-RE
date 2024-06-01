@@ -99,6 +99,7 @@ namespace N_m3u8DL_RE.DownloadManager
                         DownloaderConfig.MyOptions.MP4RealTimeDecryption = false;
                         Logger.WarnMarkUp($"[darkorange3_1]{ResString.singleFileRealtimeDecryptWarn}[/]");
                     }
+                    speedContainer.ResponseLength = segments.Sum(x => x.ExpectLength);
                 }
                 else speedContainer.SingleSegment = true;
             }
