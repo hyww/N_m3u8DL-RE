@@ -65,7 +65,7 @@ internal static partial class OtherUtil
     /// <returns></returns>
     public static TimeSpan ParseDur(string timeStr)
     {
-        var arr = timeStr.Replace("：", ":").Split(':');
+        var arr = (IEnumerable<string>)timeStr.Replace("：", ":").Split(':');
         var days = -1;
         var hours = -1;
         var mins = -1;
