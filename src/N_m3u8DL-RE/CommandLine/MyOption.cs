@@ -133,6 +133,10 @@ internal class MyOption
     /// </summary>
     public bool AppendUrlParams { get; set; }
     /// <summary>
+    /// See: <see cref="CommandInvoker.UrlReplaceRegexs"/>.
+    /// </summary>
+    public Dictionary<string, string> UrlReplaceRegexs { get; set; } = new Dictionary<string, string>();
+    /// <summary>
     /// See: <see cref="CommandInvoker.MP4RealTimeDecryption"/>.
     /// </summary>
     public bool MP4RealTimeDecryption { get; set; }

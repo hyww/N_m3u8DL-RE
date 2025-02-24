@@ -208,6 +208,7 @@ internal class Program
         {
             AppendUrlParams = option.AppendUrlParams,
             UrlProcessorArgs = option.UrlProcessorArgs,
+            UrlReplaceRegexs = option.UrlReplaceRegexs,
             BaseUrl = option.BaseUrl!,
             Headers = headers,
             CustomMethod = option.CustomHLSMethod,

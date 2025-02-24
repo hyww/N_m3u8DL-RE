@@ -178,6 +178,12 @@ internal static class StaticText
             zhTW: "將輸入Url的Params添加至分片, 對某些網站很有用, 例如 kakao.com",
             enUS: "Add Params of input Url to segments, useful for some websites, such as kakao.com"
         ),
+        ["cmd_urlReplaceRegex"] = new TextContainer
+        (
+            zhCN: "取代分片 Url 中的特定正则表达式模式. 格式:\r\n--url-replace-regex pattern1:replacement1 --url-replace-regex pattern2:replacement2",
+            zhTW: "取代分片 Url 中的特定正則表達式模式. 格式:\r\n--url-replace-regex pattern1:replacement1 --url-replace-regex pattern2:replacement2",
+            enUS: "Replace specific regular expression pattern in segment urls. Format:\r\n--url-replace-regex pattern1:replacement1 --url-replace-regex pattern2:replacement2"
+        ),
         ["cmd_autoSelect"] = new TextContainer
         (
             zhCN: "自动选择所有类型的最佳轨道",

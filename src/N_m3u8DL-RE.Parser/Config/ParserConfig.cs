@@ -25,7 +25,7 @@ public class ParserConfig
     /// <summary>
     /// 添加分片URL前置处理器. 调用顺序与列表顺序相同
     /// </summary>
-    public IList<UrlProcessor> UrlProcessors { get; } = new List<UrlProcessor>() { new DefaultUrlProcessor() };
+    public IList<UrlProcessor> UrlProcessors { get; } = new List<UrlProcessor>() { new DefaultUrlProcessor(), new UrlReplaceProcessor() };
 
     /// <summary>
     /// KEY解析器. 调用顺序与列表顺序相同
@@ -56,6 +56,11 @@ public class ParserConfig
     /// 如果 AppendUrlParams=true，得 http://xxx.com/clip_01.ts?hmac=xxx&token=xxx
     /// </summary>
     public bool AppendUrlParams { get; set; } = false;
+
+    /// <summary>
+    /// 取代分片 Url 中的特定正则表达式模式
+    /// </summary>
+    public Dictionary<string, string> UrlReplaceRegexs { get; set; }
 
     /// <summary>
     /// 此参数将会传递给URL Processor中

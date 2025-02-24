@@ -22,6 +22,7 @@ public static class ResString
     public static string binaryMerge => GetText("binaryMerge");
     public static string checkingLast => GetText("checkingLast");
     public static string cmd_appendUrlParams => GetText("cmd_appendUrlParams");
+    public static string cmd_urlReplaceRegex => GetText("cmd_urlReplaceRegex");
     public static string cmd_autoSelect => GetText("cmd_autoSelect");
     public static string cmd_disableUpdateCheck => GetText("cmd_disableUpdateCheck");
     public static string cmd_binaryMerge => GetText("cmd_binaryMerge");

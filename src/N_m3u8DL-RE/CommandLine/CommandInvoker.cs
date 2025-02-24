@@ -55,6 +55,7 @@ internal static partial class CommandInvoker
     private static readonly Option<bool> CheckSegmentsCount = new(["--check-segments-count"], description: ResString.cmd_checkSegmentsCount, getDefaultValue: () => true);
     private static readonly Option<bool> WriteMetaJson = new(["--write-meta-json"], description: ResString.cmd_writeMetaJson, getDefaultValue: () => true);
     private static readonly Option<bool> AppendUrlParams = new(["--append-url-params"], description: ResString.cmd_appendUrlParams, getDefaultValue: () => false);
+    private static readonly Option<Dictionary<string, string>> UrlReplaceRegexs = new(["--url-replace-regex"], description: ResString.cmd_urlReplaceRegex, parseArgument: ParseHeaders) { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = false };
     private static readonly Option<bool> MP4RealTimeDecryption = new (["--mp4-real-time-decryption"], description: ResString.cmd_MP4RealTimeDecryption, getDefaultValue: () => false);
     private static readonly Option<bool> UseShakaPackager = new (["--use-shaka-packager"], description: ResString.cmd_useShakaPackager, getDefaultValue: () => false) { IsHidden = true };
     private static readonly Option<DecryptEngine> DecryptionEngine = new (["--decryption-engine"], description: ResString.cmd_decryptionEngine, getDefaultValue: () => DecryptEngine.MP4DECRYPT);
@@ -593,6 +594,10 @@ internal static partial class CommandInvoker
             if (parsedHeaders != null)
                 option.Headers = parsedHeaders;
 
+            var parsedUrlReplaceRegexs = bindingContext.ParseResult.GetValueForOption(UrlReplaceRegexs);
+            if (parsedUrlReplaceRegexs != null)
+                option.UrlReplaceRegexs = parsedUrlReplaceRegexs;
+
 
             // 以用户选择语言为准优先
             if (option.UILanguage != null)
@@ -640,7 +645,7 @@ internal static partial class CommandInvoker
         var rootCommand = new RootCommand(VERSION_INFO)
         {
             Input, TmpDir, SaveDir, SaveName, LogFilePath, BaseUrl, ThreadCount, DownloadRetryCount, HttpRequestTimeout, ForceAnsiConsole, NoAnsiColor,AutoSelect, SkipMerge, SkipDownload, CheckSegmentsCount,
-            BinaryMerge, UseFFmpegConcatDemuxer, DelAfterDone, NoDateInfo, NoLog, WriteMetaJson, AppendUrlParams, ConcurrentDownload, Headers, /**SavePattern,**/ SubOnly, SubtitleFormat, AutoSubtitleFix,
+            BinaryMerge, UseFFmpegConcatDemuxer, DelAfterDone, NoDateInfo, NoLog, WriteMetaJson, AppendUrlParams, UrlReplaceRegexs, ConcurrentDownload, Headers, /**SavePattern,**/ SubOnly, SubtitleFormat, AutoSubtitleFix,
             FFmpegBinaryPath,
             LogLevel, UILanguage, UrlProcessorArgs, Keys, KeyTextFile, DecryptionEngine, DecryptionBinaryPath, UseShakaPackager, MP4RealTimeDecryption,
             MaxSpeed,
